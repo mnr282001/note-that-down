@@ -6,15 +6,17 @@ import { createClient } from '@/lib/supabase/server'
 export default async function ProtectedPage() {
   const supabase = await createClient()
 
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
+
+
+  const { data: user, error } = await supabase.auth.getUser()
+  if (error || !user?.user) {
     redirect('/login')
   }
 
   return (
     <div className="flex h-svh w-full items-center justify-center gap-2">
       <p>
-        Hello <span>{data.user.email}</span>
+        Hello <span>{user.user.email}</span>
       </p>
       <LogoutButton />
     </div>
