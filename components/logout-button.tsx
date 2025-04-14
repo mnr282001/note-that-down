@@ -2,22 +2,25 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { LogOut } from 'lucide-react'
 
 export function LogoutButton() {
-  const router = useRouter()
+  const supabase = createClient()
 
-  const logout = async () => {
-    const supabase = createClient()
+  const handleLogout = async () => {
     await supabase.auth.signOut()
-    
-    // Clear any cached data
-    window.localStorage.clear()
-    window.sessionStorage.clear()
-    
-    // Force a hard navigation to the root page
     window.location.href = '/'
   }
 
-  return <Button onClick={logout}>Logout</Button>
+  return (
+    <Button 
+      variant="outline" 
+      size="sm" 
+      onClick={handleLogout}
+      className="flex items-center gap-2"
+    >
+      <LogOut className="h-4 w-4" />
+      <span>Logout</span>
+    </Button>
+  )
 }

@@ -4,7 +4,6 @@ import { LoginForm } from '@/components/login-form'
 import { SignUpForm } from '@/components/sign-up-form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { headers } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -12,8 +11,10 @@ export const revalidate = 0
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+  // Await the searchParams to get the query parameters
+  const params = await searchParams
   const supabase = await createClient()
   
   // Check if user is already logged in
@@ -25,7 +26,7 @@ export default async function Home({
   }
 
   // Determine which tab to show based on URL query parameter
-  const defaultTab = searchParams.tab === 'signup' ? 'signup' : 'login'
+  const defaultTab = params.tab === 'signup' ? 'signup' : 'login'
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">

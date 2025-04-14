@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MailCheck, ArrowRight, Check, Calendar, Bell, Sparkles, Zap, Clock, Target } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -112,7 +112,7 @@ export default function ComingSoonPage() {
               Coming Soon
             </CardTitle>
             <CardDescription className="text-center text-sm md:text-base">
-              We're crafting something special just for you
+              We&apos;re crafting something special just for you
             </CardDescription>
           </CardHeader>
           
@@ -212,7 +212,7 @@ export default function ComingSoonPage() {
                     </p>
                   )}
                   <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                    We'll notify you when we launch. No spam, we promise!
+                    We&apos;ll notify you when we launch. No spam, we promise!
                   </p>
                 </form>
               ) : (
@@ -221,10 +221,10 @@ export default function ComingSoonPage() {
                     <Check className="w-5 h-5 text-green-600 dark:text-green-400" />
                   </div>
                   <p className="text-green-800 dark:text-green-300 text-sm md:text-base font-medium">
-                    You're on the list!
+                    You&apos;re on the list!
                   </p>
                   <p className="text-green-700/80 dark:text-green-400/80 text-xs md:text-sm mt-1">
-                    Thanks for your interest. We'll notify you when we launch.
+                    Thanks for your interest. We&apos;ll notify you when we launch.
                   </p>
                 </div>
               )}

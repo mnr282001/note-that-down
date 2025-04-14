@@ -2,15 +2,18 @@ import { createClient } from '@/lib/supabase/server'
 import { validateMagicLink } from '@/lib/magic-link'
 import { redirect } from 'next/navigation'
 
+// Define the page component
 export default async function MagicLinkPage({
   params,
 }: {
-  params: { token: string }
+  params: Promise<{ token: string }>
 }) {
+  // Await the params to get the token
+  const { token } = await params
   const supabase = await createClient()
   
   // Validate the magic link
-  const magicLinkData = await validateMagicLink(params.token)
+  const magicLinkData = await validateMagicLink(token)
   
   if (!magicLinkData) {
     // If the link is invalid or expired, redirect to login
@@ -20,7 +23,7 @@ export default async function MagicLinkPage({
   // Sign in the user using the magic link token
   const { error: signInError } = await supabase.auth.signInWithPassword({
     email: magicLinkData.userId,
-    password: params.token, // Using the token as a one-time password
+    password: token, // Using the token as a one-time password
   })
 
   if (signInError) {
