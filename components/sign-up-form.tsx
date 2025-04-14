@@ -53,6 +53,10 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     }
   }
 
+  const handleLoginClick = () => {
+    router.push('/?tab=login')
+  }
+
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -105,9 +109,12 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{' '}
-              <Link href="/auth/login" className="underline underline-offset-4">
+              <button 
+                onClick={handleLoginClick}
+                className="underline underline-offset-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300"
+              >
                 Login
-              </Link>
+              </button>
             </div>
           </form>
         </CardContent>

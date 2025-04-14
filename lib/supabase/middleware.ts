@@ -40,12 +40,33 @@ export async function updateSession(request: NextRequest) {
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
+    !request.nextUrl.pathname.startsWith('/auth') &&
+    request.nextUrl.pathname !== '/' // Allow access to the root path
   ) {
-    // no user, potentially respond by redirecting the user to the login page
+    // no user, redirect to the root page instead of /auth/login
     const url = request.nextUrl.clone()
-    url.pathname = '/auth/login'
+    url.pathname = '/'
     return NextResponse.redirect(url)
+  }
+
+  // Add cache control headers for protected routes
+  if (user && request.nextUrl.pathname.startsWith('/protected')) {
+    // Create a new response with cache control headers
+    const response = NextResponse.next({
+      request,
+    })
+
+    // Set cache control headers to prevent caching
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+
+    // Copy cookies from supabaseResponse
+    supabaseResponse.cookies.getAll().forEach(cookie => {
+      response.cookies.set(cookie.name, cookie.value, cookie)
+    })
+
+    return response
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
