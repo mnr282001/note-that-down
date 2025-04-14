@@ -67,7 +67,7 @@ export function EmailSubscriptionForm() {
   }
 
   return (
-    <div>
+    <div className="w-full">
       {success && (
         <ReactConfetti
           width={windowSize.width}

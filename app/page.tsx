@@ -29,7 +29,7 @@ export default async function Home({
   const defaultTab = params.tab === 'signup' ? 'signup' : 'login'
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-b from-indigo-100 via-purple-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-gray-800 p-3 md:p-6 overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-indigo-100 via-purple-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-gray-800 p-3 md:p-6 overflow-y-auto">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 -left-10 w-40 h-40 bg-blue-400 dark:bg-blue-600 rounded-full opacity-20 blur-3xl animate-blob"></div>
@@ -49,7 +49,7 @@ export default async function Home({
         <div className="absolute -top-4 right-1/2 w-2 h-2 bg-orange-500 rounded-full animate-confetti [animation-delay:1.4s]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-4xl">
+      <div className="relative z-10 w-full max-w-4xl my-8">
         <div className="text-center mb-4 md:mb-6">
           <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">Launching Soon</p>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400 mt-1">
