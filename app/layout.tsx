@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Note That Down',
     description: 'Elevate your standups. Capture your progress. Organize your workflow.',
-    images: ['/logo.png'],
+    images: ['/coming-soon-preview.svg'],
     url: 'https://note-that-down.com/coming-soon',
     type: 'website',
   },
