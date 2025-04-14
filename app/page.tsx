@@ -140,7 +140,7 @@ export default async function Home({
                     </button>
                   </form>
                   <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
-                    We'll notify you when we launch. No spam, we promise!
+                    We&apos;ll notify you when we launch. No spam, we promise!
                   </p>
                 </div>
               )}
