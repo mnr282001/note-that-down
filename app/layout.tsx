@@ -18,6 +18,13 @@ export const metadata: Metadata = {
   icons: {
     icon: '/logo.png',
   },
+  openGraph: {
+    title: 'Note That Down',
+    description: 'Elevate your standups. Capture your progress. Organize your workflow.',
+    images: ['/logo.png'],
+    url: 'https://note-that-down.com/coming-soon',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
