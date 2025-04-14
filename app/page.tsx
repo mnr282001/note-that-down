@@ -4,6 +4,7 @@ import { SignUpForm } from '@/components/sign-up-form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { EmailSubscriptionForm } from '@/components/email-subscription-form'
 
 export default async function Home({
   searchParams,
@@ -119,9 +120,15 @@ export default async function Home({
 
             {/* Form Section - Right Column */}
             <div className="md:col-span-1">
-              {isLocalhost ? (
-                // Show login/signup for localhost
+              {/* Email subscription form - always visible */}
+              <div className="mb-6">
+                <EmailSubscriptionForm />
+              </div>
+              
+              {/* Login/Signup forms - only on localhost */}
+              {isLocalhost && (
                 <div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Developer Access</h3>
                   <Tabs defaultValue={defaultTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-4">
                       <TabsTrigger value="login" className="text-sm">Login</TabsTrigger>
@@ -134,26 +141,6 @@ export default async function Home({
                       <SignUpForm />
                     </TabsContent>
                   </Tabs>
-                </div>
-              ) : (
-                // Show email subscription for production
-                <div>
-                  <form className="space-y-2">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white/50 dark:bg-gray-800/50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <button
-                      type="submit"
-                      className="w-full bg-indigo-600 text-white py-2 px-4 text-sm rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-300"
-                    >
-                      Notify Me
-                    </button>
-                  </form>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
-                    We&apos;ll notify you when we launch. No spam, we promise!
-                  </p>
                 </div>
               )}
             </div>
