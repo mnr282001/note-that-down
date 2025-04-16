@@ -49,6 +49,23 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Check if user has completed onboarding
+  if (user && !request.nextUrl.pathname.startsWith('/onboarding')) {
+    // Check if user has completed onboarding by looking for entries in user_profiles
+    const { data: userProfile } = await supabase
+      .from('user_profiles')
+      .select('id')
+      .eq('id', user.id)
+      .single()
+
+    // If user has no profile, they haven't completed onboarding
+    if (!userProfile && request.nextUrl.pathname.startsWith('/protected')) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/onboarding'
+      return NextResponse.redirect(url)
+    }
+  }
+
   // Add cache control headers for protected routes
   if (user && request.nextUrl.pathname.startsWith('/protected')) {
     // Create a new response with cache control headers
