@@ -333,38 +333,53 @@ export function OnboardingForm() {
             <div className="space-y-4">
               <div>
                 <Label>What are your 3-5 primary responsibilities in your current role?</Label>
-                {formData.responsibilities.map((responsibility, index) => (
-                  <div key={index} className="flex items-center space-x-2 mt-2">
-                    <Input
-                      value={responsibility}
-                      onChange={(e) => handleArrayInputChange('responsibilities', index, e.target.value)}
-                      placeholder={`Responsibility ${index + 1}`}
-                    />
-                    {formData.responsibilities.length > 1 && (
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => removeArrayItem('responsibilities', index)}
-                      >
-                        <span className="sr-only">Remove</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                          <path d="M18 6 6 18" />
-                          <path d="m6 6 12 12" />
-                        </svg>
-                      </Button>
-                    )}
-                  </div>
-                ))}
-                {formData.responsibilities.length < 5 && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                    onClick={() => addArrayItem('responsibilities')}
-                  >
-                    Add Responsibility
-                  </Button>
-                )}
+                <div className="space-y-2 mt-2">
+                  {formData.responsibilities.map((responsibility, index) => (
+                    <div key={index} className="flex items-center gap-2 group">
+                      <div className="flex-1 relative">
+                        <Input
+                          value={responsibility}
+                          onChange={(e) => handleArrayInputChange('responsibilities', index, e.target.value)}
+                          placeholder={`Responsibility ${index + 1}`}
+                          className="pr-8"
+                        />
+                        {responsibility && (
+                          <div className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500">
+                            <Check className="h-4 w-4" />
+                          </div>
+                        )}
+                      </div>
+                      {formData.responsibilities.length > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                          onClick={() => removeArrayItem('responsibilities', index)}
+                          title="Remove responsibility"
+                        >
+                          <span className="sr-only">Remove</span>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <path d="M18 6 6 18" />
+                            <path d="m6 6 12 12" />
+                          </svg>
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                  {formData.responsibilities.length < 5 && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full mt-2"
+                      onClick={() => addArrayItem('responsibilities')}
+                    >
+                      + Add Another Responsibility
+                    </Button>
+                  )}
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                  Add your main responsibilities (3-5 recommended)
+                </p>
               </div>
               
               <div>
