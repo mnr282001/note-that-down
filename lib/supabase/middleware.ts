@@ -37,52 +37,54 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth') &&
-    request.nextUrl.pathname !== '/' // Allow access to the root path
-  ) {
-    // no user, redirect to the root page instead of /auth/login
+  // If user is not authenticated and trying to access protected routes
+  if (!user && request.nextUrl.pathname.startsWith('/protected')) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
     return NextResponse.redirect(url)
   }
 
-  // Check if user has completed onboarding
-  if (user && !request.nextUrl.pathname.startsWith('/onboarding')) {
-    // Check if user has completed onboarding by looking for entries in user_profiles
+  // If user is authenticated
+  if (user) {
+    // Check if user has completed onboarding
     const { data: userProfile } = await supabase
       .from('user_profiles')
       .select('id')
       .eq('id', user.id)
       .single()
 
-    // If user has no profile, they haven't completed onboarding
-    if (!userProfile && request.nextUrl.pathname.startsWith('/protected')) {
+    // If user is on root page and authenticated
+    if (request.nextUrl.pathname === '/') {
       const url = request.nextUrl.clone()
-      url.pathname = '/onboarding'
+      if (!userProfile) {
+        // If user hasn't completed onboarding, redirect to onboarding page
+        url.pathname = '/protected/onboarding'
+      } else {
+        // If user has completed onboarding, redirect to dashboard
+        url.pathname = '/protected'
+      }
+      return NextResponse.redirect(url)
+    }
+
+    // If user hasn't completed onboarding and is trying to access protected routes
+    if (!userProfile && request.nextUrl.pathname.startsWith('/protected') && !request.nextUrl.pathname.startsWith('/protected/onboarding')) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/protected/onboarding'
       return NextResponse.redirect(url)
     }
   }
 
   // Add cache control headers for protected routes
   if (user && request.nextUrl.pathname.startsWith('/protected')) {
-    // Create a new response with cache control headers
     const response = NextResponse.next({
       request,
     })
-
-    // Set cache control headers to prevent caching
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
     response.headers.set('Pragma', 'no-cache')
     response.headers.set('Expires', '0')
-
-    // Copy cookies from supabaseResponse
     supabaseResponse.cookies.getAll().forEach(cookie => {
       response.cookies.set(cookie.name, cookie.value, cookie)
     })
-
     return response
   }
 

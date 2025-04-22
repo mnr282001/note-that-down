@@ -1,14 +1,17 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { ArrowRight, HelpCircle, Lightbulb, User, Clock, Activity } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function ProtectedPage() {
-  const supabase = createServerComponentClient({ cookies })
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error || !user) {
+    redirect('/')
+  }  console.log("SUPABASE USER", user);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
