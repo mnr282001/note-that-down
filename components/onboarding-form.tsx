@@ -163,7 +163,7 @@ export function OnboardingForm() {
       <CardHeader>
         <CardTitle>Welcome to Note That Down</CardTitle>
         <CardDescription>
-          Let's get to know you better. This will help us personalize your experience.
+          Let&apos;s get to know you better. This will help us personalize your experience.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -249,7 +249,7 @@ export function OnboardingForm() {
         </div>
         
         <div>
-          <Label htmlFor="biggestChallenge">What's your biggest challenge with preparing for or participating in standups?</Label>
+          <Label htmlFor="biggestChallenge">What&apos;s your biggest challenge with preparing for or participating in standups?</Label>
           <Textarea
             id="biggestChallenge"
             value={formData.biggestChallenge}
@@ -262,7 +262,7 @@ export function OnboardingForm() {
         </div>
         
         <div>
-          <Label htmlFor="currentTrackingMethod">How do you currently track what you've accomplished each day?</Label>
+          <Label htmlFor="currentTrackingMethod">How do you currently track what you&apos;ve accomplished each day?</Label>
           <Textarea
             id="currentTrackingMethod"
             value={formData.currentTrackingMethod}

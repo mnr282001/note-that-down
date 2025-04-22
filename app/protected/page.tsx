@@ -1,5 +1,3 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { ArrowRight, HelpCircle, Lightbulb, User, Clock, Activity } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
