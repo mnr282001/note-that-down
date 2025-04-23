@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, HelpCircle, Lightbulb, User, Clock, Activity } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { LogoutButton } from '@/components/logout-button'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -41,12 +42,7 @@ export default async function ProtectedPage() {
               <User className="mr-2 h-4 w-4" />
               Profile
             </Link>
-            <Link
-              href="/auth/logout"
-              className="inline-flex items-center justify-center rounded-md bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-300"
-            >
-              Logout
-            </Link>
+            <LogoutButton />
           </div>
         </header>
 

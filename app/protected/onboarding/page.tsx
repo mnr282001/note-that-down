@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { LogOut } from 'lucide-react'
+import { LogoutButton } from '@/components/logout-button'
 
 export default async function OnboardingPage() {
   const supabase = await createClient()
@@ -16,12 +16,7 @@ export default async function OnboardingPage() {
     <div className="min-h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-gray-800 p-4 md:p-8">
       <div className="max-w-2xl mx-auto relative z-10">
         <div className="flex justify-end mb-4">
-          <Link href="/auth/logout">
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
-          </Link>
+          <LogoutButton />
         </div>
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 md:p-8 shadow-xl">
           <div className="text-center space-y-6">
