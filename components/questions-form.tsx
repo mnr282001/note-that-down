@@ -142,6 +142,15 @@ export default function QuestionsForm() {
     }
   }
 
+  // Format today's date
+  const today = new Date()
+  const formattedDate = today.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  })
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-gray-800 p-4 md:p-8">
       {/* Animated background elements */}
@@ -162,7 +171,7 @@ export default function QuestionsForm() {
           </Link>
           <h1 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Daily Standup Notes</h1>
           <Link
-            href="/suggestions"
+            href="/protected/suggestions"
             className="ml-auto text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 text-sm flex items-center"
           >
             <Lightbulb className="h-4 w-4 mr-1" />
@@ -170,80 +179,140 @@ export default function QuestionsForm() {
           </Link>
         </div>
         
-        <Card className="max-w-2xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-          <CardContent className="pt-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                {standupQuestions.map((question) => (
-                  <div key={question.id} className="space-y-2">
-                    <Label htmlFor={question.id}>{question.text}</Label>
-                    {question.type === 'text' && (
-                      <Textarea
-                        id={question.id}
-                        value={answers[question.id] as string || ''}
-                        onChange={(e) => handleChange(question.id, e.target.value)}
-                        placeholder={question.placeholder}
-                        required={question.required}
-                        className="min-h-[100px]"
-                      />
-                    )}
-                    {question.type === 'number' && (
-                      <Input
-                        id={question.id}
-                        type="number"
-                        value={answers[question.id] as string || ''}
-                        onChange={(e) => handleChange(question.id, e.target.value)}
-                        placeholder={question.placeholder}
-                        required={question.required}
-                      />
-                    )}
-                    {question.type === 'select' && (
-                      <Select
-                        value={answers[question.id] as string || ''}
-                        onValueChange={(value) => handleChange(question.id, value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={question.placeholder} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {question.options?.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                    {question.type === 'multiselect' && (
-                      <div className="grid grid-cols-2 gap-2">
-                        {question.options?.map((option) => (
-                          <div 
-                            key={option}
-                            className={`flex items-center justify-between px-3 py-2 rounded-md cursor-pointer border ${
-                              selectedOptions[question.id]?.includes(option)
-                                ? 'bg-indigo-100 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-700'
-                                : 'bg-white/60 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700'
-                            }`}
-                            onClick={() => handleMultiSelectChange(question.id, option)}
-                          >
-                            <span className="text-sm">{option}</span>
-                            {selectedOptions[question.id]?.includes(option) && (
-                              <CheckCircle className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+        <Card className="border-0 shadow-xl bg-white/90 dark:bg-gray-800/80 backdrop-blur-md overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500"></div>
+          
+          <CardHeader className="pb-2 px-4 md:px-6">
+            <div className="flex items-center justify-center mb-2">
+              <CalendarDays className="h-6 w-6 text-indigo-500 dark:text-indigo-400 mr-2" />
+              <CardTitle className="text-2xl md:text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+                Daily Standup
+              </CardTitle>
+            </div>
+            
+            <div className="text-center mb-2">
+              <div className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 text-sm font-medium">
+                <Clock className="h-3.5 w-3.5 mr-1" />
+                {formattedDate}
               </div>
-              <div className="mt-8 flex justify-end">
-                <Button
-                  type="submit"
+            </div>
+            
+            <CardDescription className="text-center text-sm md:text-base px-6">
+              Share your daily updates to keep the team informed about your progress, 
+              plans, and any challenges you're facing. Your responses will be used to 
+              generate a comprehensive standup summary email.
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent className="space-y-6 px-4 md:px-6 pt-2">
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 rounded-lg px-4 py-3 text-sm text-blue-700 dark:text-blue-300">
+              <p className="flex items-start">
+                <HelpCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0 text-blue-500 dark:text-blue-400" />
+                <span>
+                  <strong>What is a standup?</strong> A standup is a brief daily meeting for software teams to 
+                  synchronize activities and discuss progress. This form collects the three key components: 
+                  what you accomplished, what you're working on next, and any blockers you're facing.
+                </span>
+              </p>
+            </div>
+            
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {standupQuestions.map((question) => (
+                <div key={question.id} className="space-y-2">
+                  <Label className="text-indigo-700 dark:text-indigo-300 flex items-center">
+                    {question.required ? (
+                      <CheckCircle className="h-4 w-4 mr-1 text-indigo-500 dark:text-indigo-400" />
+                    ) : (
+                      <File className="h-4 w-4 mr-1 text-indigo-500 dark:text-indigo-400" />
+                    )}
+                    {question.text}
+                    {question.required && (
+                      <span className="ml-1 text-pink-500">*</span>
+                    )}
+                  </Label>
+                  
+                  {question.type === 'text' && (
+                    <Textarea
+                      name={question.id}
+                      className="bg-white/60 dark:bg-gray-800/60 border border-indigo-100 dark:border-indigo-800/30 focus:ring-2 focus:ring-indigo-500"
+                      rows={3}
+                      placeholder={question.placeholder}
+                      onChange={(e) => handleChange(question.id, e.target.value)}
+                    />
+                  )}
+                  
+                  {question.type === 'number' && (
+                    <Input
+                      type="number"
+                      name={question.id}
+                      className="bg-white/60 dark:bg-gray-800/60 border border-indigo-100 dark:border-indigo-800/30 focus:ring-2 focus:ring-indigo-500"
+                      placeholder={question.placeholder}
+                      onChange={(e) => handleChange(question.id, e.target.value)}
+                    />
+                  )}
+                  
+                  {question.type === 'select' && (
+                    <Select onValueChange={(value) => handleChange(question.id, value)}>
+                      <SelectTrigger className="bg-white/60 dark:bg-gray-800/60 border border-indigo-100 dark:border-indigo-800/30 focus:ring-2 focus:ring-indigo-500">
+                        <SelectValue placeholder="Select an option" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {question.options?.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                  
+                  {question.type === 'multiselect' && (
+                    <div className="grid grid-cols-2 gap-2">
+                      {question.options?.map((option) => (
+                        <div 
+                          key={option}
+                          className={`flex items-center justify-between px-3 py-2 rounded-md cursor-pointer border ${
+                            selectedOptions[question.id]?.includes(option)
+                              ? 'bg-indigo-100 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-700'
+                              : 'bg-white/60 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700'
+                          }`}
+                          onClick={() => handleMultiSelectChange(question.id, option)}
+                        >
+                          <span className="text-sm">{option}</span>
+                          {selectedOptions[question.id]?.includes(option) && (
+                            <CheckCircle className="h-4 w-4 text-indigo-500 dark:text-indigo-400" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="text-sm text-gray-600 dark:text-gray-300 mb-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3">
+                  <p className="flex items-start">
+                    <CalendarDays className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                    <span>
+                      Your responses will be processed by our AI to generate a concise standup summary email for your team.
+                      This helps everyone stay aligned without requiring a synchronous meeting.
+                    </span>
+                  </p>
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition-colors duration-300 inline-flex items-center justify-center py-3"
                   disabled={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                  {isSubmitting ? (
+                    <>Processing...</>
+                  ) : (
+                    <>
+                      Submit Standup Notes
+                      <Send className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </div>
             </form>
