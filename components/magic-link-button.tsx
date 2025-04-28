@@ -26,9 +26,9 @@ export function MagicLinkButton({ email }: MagicLinkButtonProps) {
       
       if (error) throw error
       alert('Check your email for the magic link!')
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending magic link:", error)
-      alert(`Error: ${error.message}`)
+      alert(`Error: ${error instanceof Error ? error.message : 'An unknown error occurred'}`)
     }
   }
 

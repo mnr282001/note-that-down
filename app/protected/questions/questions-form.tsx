@@ -66,8 +66,9 @@ export default function QuestionsForm() {
       
       alert('Feedback submitted successfully!')
       router.push('/protected')
-    } catch (error: any) {
-      alert(`Error submitting feedback: ${error.message}`)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
+      alert(`Error submitting feedback: ${errorMessage}`)
     }
   }
 
