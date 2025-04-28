@@ -3,6 +3,7 @@ import { ArrowRight, HelpCircle, Lightbulb, User, Clock, Activity } from 'lucide
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { LogoutButton } from '@/components/logout-button'
+import { MagicLinkButton } from '@/components/magic-link-button'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -35,6 +36,7 @@ export default async function ProtectedPage() {
             <p className="text-gray-600 dark:text-gray-300">Welcome back, {user?.email}</p>
           </div>
           <div className="flex items-center space-x-4">
+            {user?.email && <MagicLinkButton email={user.email} />}
             <Link
               href="/protected/profile"
               className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-300"
