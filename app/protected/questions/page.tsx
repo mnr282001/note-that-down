@@ -1,7 +1,6 @@
-// app/questions/form/page.tsx
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import QuestionsForm from './questions-form'
+import QuestionsFormWrapper from './questions-form-wrapper'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -14,5 +13,8 @@ export default async function QuestionsPage() {
     redirect('/')
   }
 
-  return <QuestionsForm />
+  // Pass any server data to the client component if needed
+  // For example, you could fetch user profile data here
+  
+  return <QuestionsFormWrapper />
 }
