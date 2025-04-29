@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ArrowLeft, CalendarDays, CheckCircle, Clock, File, HelpCircle, Lightbulb, Send } from 'lucide-react'
+import { ArrowLeft, CalendarDays, CheckCircle, Clock, File, HelpCircle, Lightbulb, Send, ThumbsUp } from 'lucide-react'
 import Link from 'next/link'
 
 interface Question {
@@ -79,6 +79,7 @@ export default function QuestionsForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [authError, setAuthError] = useState<string | null>(null)
   const [session, setSession] = useState<any>(null)
+  const [submitted, setSubmitted] = useState(false)
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -177,7 +178,10 @@ export default function QuestionsForm() {
         throw insertError
       }
       
-      alert('Standup notes submitted successfully! An email summary will be generated shortly.')
+      setSubmitted(true)
+      setTimeout(() => {
+        router.push('/protected')
+      }, 3000)
     } catch (error: any) {
       console.error('Submission error:', error)
       if (error.message.includes('cookie') || error.message.includes('auth')) {
@@ -216,6 +220,48 @@ export default function QuestionsForm() {
           >
             Go to Login
           </Button>
+        </div>
+      </div>
+    )
+  }
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-gray-800 p-4 md:p-8">
+        <div className="max-w-2xl mx-auto relative z-10">
+          <div className="flex items-center mb-6">
+            <Link 
+              href="/protected" 
+              className="inline-flex items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700 px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mr-4"
+            >
+              <ArrowLeft className="mr-1 h-4 w-4" />
+              Back
+            </Link>
+            <h1 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Daily Standup Notes</h1>
+            <Link
+              href="/protected/suggestions"
+              className="ml-auto text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 text-sm flex items-center"
+            >
+              <Lightbulb className="h-4 w-4 mr-1" />
+              Suggest Improvements
+            </Link>
+          </div>
+          
+          <Card className="border-0 shadow-xl bg-white/90 dark:bg-gray-800/80 backdrop-blur-md overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500"></div>
+            <div className="py-16 px-6 text-center">
+              <div className="flex justify-center mb-4">
+                <ThumbsUp className="h-16 w-16 text-green-500 dark:text-green-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Thank You!</h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                Your standup notes have been submitted successfully. An email summary will be generated shortly.
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Redirecting you back to the dashboard...
+              </p>
+            </div>
+          </Card>
         </div>
       </div>
     )
