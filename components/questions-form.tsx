@@ -154,11 +154,21 @@ export default function QuestionsForm() {
       
       const currentDate = new Date().toISOString()
       
+      // Transform answers to include question text
+      const formattedAnswers = Object.entries(answers).map(([questionId, answer]) => {
+        const question = standupQuestions.find(q => q.id === questionId)
+        return {
+          questionId,
+          questionText: question?.text || '',
+          answer: answer
+        }
+      })
+      
       const { error: insertError } = await supabase
         .from('standup_entries')
         .insert({
           user_id: user.id,
-          answers: answers,
+          answers: formattedAnswers,
           created_at: currentDate
         })
       
