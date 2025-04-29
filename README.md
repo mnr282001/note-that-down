@@ -8,12 +8,14 @@ A modern, intelligent standup automation platform that helps software developmen
   - Email/password based authentication
   - Protected routes with middleware
   - Secure session management
+  - Centralized session handling with FormLayout
 
 - **Standup Management**
   - Customizable question templates
-  - Multiple question types (text, number, select)
+  - Multiple question types (text, number, select, multiselect)
   - Progress tracking
   - Rich text formatting
+  - Consistent form layouts with FormLayout component
 
 - **Team Collaboration**
   - Individual updates collection
@@ -26,6 +28,9 @@ A modern, intelligent standup automation platform that helps software developmen
   - Intuitive onboarding process
   - Feedback collection system
   - Email notifications
+  - Consistent form layouts and navigation
+  - Animated background elements
+  - Dark mode support
 
 ## Tech Stack
 
@@ -77,6 +82,8 @@ note-that-down/
 ├── app/                 # Next.js app router pages
 ├── components/          # React components
 │   ├── ui/             # Reusable UI components
+│   │   ├── form-layout.tsx  # Centralized form layout with session handling
+│   │   └── ...        # Other UI components
 │   └── forms/          # Form components
 ├── lib/                # Utility functions and services
 ├── public/             # Static assets
@@ -101,6 +108,16 @@ The project uses Supabase with the following main tables:
 - `auth.users` - User authentication (managed by Supabase)
 - `standup_entries` - Daily standup submissions
 - `suggestions` - User feedback and suggestions
+
+### Key Components
+
+- **FormLayout**: A reusable layout component that provides:
+  - Consistent form structure
+  - Session management
+  - Navigation controls
+  - Responsive design
+  - Dark mode support
+  - Animated backgrounds
 
 ## Contributing
 
