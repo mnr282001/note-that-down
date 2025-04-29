@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useState, useEffect } from 'react'
+import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -77,8 +77,21 @@ export default function QuestionsForm() {
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({})
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const supabase = createClientComponentClient()
+  const [authError, setAuthError] = useState<string | null>(null)
+  const [session, setSession] = useState<any>(null)
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
   const router = useRouter()
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setSession(session)
+    }
+    getSession()
+  }, [supabase.auth])
 
   const handleChange = (questionId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }))
@@ -101,6 +114,7 @@ export default function QuestionsForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setAuthError(null)
     
     // Validate required fields
     const requiredQuestions = standupQuestions.filter(q => q.required)
@@ -117,13 +131,30 @@ export default function QuestionsForm() {
     }
     
     try {
-      const { data: { user } } = await supabase.auth.getUser()
+      if (!session) {
+        console.error('No active session')
+        setAuthError('Your session has expired. Please log in again.')
+        setIsSubmitting(false)
+        return
+      }
+
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
       
-      if (!user) throw new Error('User not authenticated')
+      if (userError) {
+        console.error('User error:', userError)
+        throw userError
+      }
+      
+      if (!user) {
+        console.error('No user found')
+        setAuthError('User not authenticated')
+        setIsSubmitting(false)
+        return
+      }
       
       const currentDate = new Date().toISOString()
       
-      const { error } = await supabase
+      const { error: insertError } = await supabase
         .from('standup_entries')
         .insert({
           user_id: user.id,
@@ -131,12 +162,19 @@ export default function QuestionsForm() {
           created_at: currentDate
         })
       
-      if (error) throw error
+      if (insertError) {
+        console.error('Insert error:', insertError)
+        throw insertError
+      }
       
       alert('Standup notes submitted successfully! An email summary will be generated shortly.')
-      router.push('/protected')
     } catch (error: any) {
-      alert(`Error submitting standup notes: ${error.message}`)
+      console.error('Submission error:', error)
+      if (error.message.includes('cookie') || error.message.includes('auth')) {
+        setAuthError('Authentication error. Please try logging in again.')
+      } else {
+        alert(`Error submitting standup notes: ${error.message}`)
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -150,6 +188,28 @@ export default function QuestionsForm() {
     month: 'long', 
     day: 'numeric' 
   })
+
+  // Add a check for session at the start of the component
+  if (!session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+            Session Expired
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            Please log in again to continue.
+          </p>
+          <Button
+            onClick={() => router.push('/')}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+          >
+            Go to Login
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-gray-800 p-4 md:p-8">
