@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
+import { Session } from '@supabase/supabase-js'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -77,8 +78,7 @@ export default function QuestionsForm() {
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({})
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [authError, setAuthError] = useState<string | null>(null)
-  const [session, setSession] = useState<any>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -115,7 +115,6 @@ export default function QuestionsForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setAuthError(null)
     
     // Validate required fields
     const requiredQuestions = standupQuestions.filter(q => q.required)
@@ -134,8 +133,6 @@ export default function QuestionsForm() {
     try {
       if (!session) {
         console.error('No active session')
-        setAuthError('Your session has expired. Please log in again.')
-        setIsSubmitting(false)
         return
       }
 
@@ -148,8 +145,6 @@ export default function QuestionsForm() {
       
       if (!user) {
         console.error('No user found')
-        setAuthError('User not authenticated')
-        setIsSubmitting(false)
         return
       }
       
@@ -182,12 +177,12 @@ export default function QuestionsForm() {
       setTimeout(() => {
         router.push('/protected')
       }, 3000)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Submission error:', error)
-      if (error.message.includes('cookie') || error.message.includes('auth')) {
-        setAuthError('Authentication error. Please try logging in again.')
+      if (error instanceof Error && (error.message.includes('cookie') || error.message.includes('auth'))) {
+        console.error('Authentication error:', error)
       } else {
-        alert(`Error submitting standup notes: ${error.message}`)
+        alert(`Error submitting standup notes: ${error instanceof Error ? error.message : 'Unknown error'}`)
       }
     } finally {
       setIsSubmitting(false)
@@ -315,7 +310,7 @@ export default function QuestionsForm() {
             
             <CardDescription className="text-center text-sm md:text-base px-6">
               Share your daily updates to keep the team informed about your progress, 
-              plans, and any challenges you're facing. Your responses will be used to 
+              plans, and any challenges you&apos;re facing. Your responses will be used to 
               generate a comprehensive standup summary email.
             </CardDescription>
           </CardHeader>
@@ -327,7 +322,7 @@ export default function QuestionsForm() {
                 <span>
                   <strong>What is a standup?</strong> A standup is a brief daily meeting for software teams to 
                   synchronize activities and discuss progress. This form collects the three key components: 
-                  what you accomplished, what you're working on next, and any blockers you're facing.
+                  what you accomplished, what you&apos;re working on next, and any blockers you&apos;re facing.
                 </span>
               </p>
             </div>

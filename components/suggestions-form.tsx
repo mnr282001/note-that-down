@@ -9,13 +9,13 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ArrowLeft, Lightbulb, Send, ThumbsUp } from 'lucide-react'
 import Link from 'next/link'
+import { Session } from '@supabase/supabase-js'
 
 export default function SuggestionsForm() {
   const [suggestion, setSuggestion] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [authError, setAuthError] = useState<string | null>(null)
-  const [session, setSession] = useState<any>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -29,6 +29,27 @@ export default function SuggestionsForm() {
     }
     getSession()
   }, [supabase.auth])
+
+  if (!session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+            Session Expired
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            Please log in again to continue.
+          </p>
+          <Button
+            onClick={() => router.push('/')}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+          >
+            Go to Login
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -58,13 +79,19 @@ export default function SuggestionsForm() {
       setTimeout(() => {
         router.push('/protected')
       }, 3000)
-    } catch (error: any) {
-      alert(`Error submitting suggestion: ${error.message}`)
+    } catch (error: unknown) {
+      console.error('Submission error:', error)
+      if (error instanceof Error) {
+        alert(`Error submitting suggestion: ${error.message}`)
+      } else {
+        alert('An unknown error occurred while submitting your suggestion')
+      }
       setIsSubmitting(false)
     }
   }
 
   return (
+    
     <div className="min-h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-gray-800 p-4 md:p-8">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -95,7 +122,7 @@ export default function SuggestionsForm() {
               </div>
               <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Thank You!</h2>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
-                Your suggestion has been submitted successfully. We'll use it to improve future standup summaries.
+                Your suggestion has been submitted successfully. We&apos;ll use it to improve future standup summaries.
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Redirecting you back to the dashboard...
