@@ -91,7 +91,6 @@ export default function SuggestionsForm() {
   }
 
   return (
-    
     <div className="min-h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-gray-800 p-4 md:p-8">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">

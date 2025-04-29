@@ -292,7 +292,6 @@ export default function QuestionsForm() {
         
         <Card className="border-0 shadow-xl bg-white/90 dark:bg-gray-800/80 backdrop-blur-md overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500"></div>
-          
           <CardHeader className="pb-2 px-4 md:px-6">
             <div className="flex items-center justify-center mb-2">
               <CalendarDays className="h-6 w-6 text-indigo-500 dark:text-indigo-400 mr-2" />
