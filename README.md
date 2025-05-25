@@ -27,56 +27,30 @@ Note That Down is a productivity tool designed to streamline your daily work ref
 The app uses Supabase (PostgreSQL) with the following main tables:
 
 - **user_profiles**: Stores user job titles, departments, responsibilities, and other profile info.
-  - `id` (uuid): Primary key
-  - `job_title` (text)
-  - `department` (department_type)
-  - `created_at`, `updated_at` (timestampz)
-  - `responsibilities` (text)
-  - `valuable_information` (text)
-  - `biggest_challenge` (text)
-  - `current_tracking_method` (text)
-  - `signup_reason` (text)
+
 - **user_responsibilities**: Tracks specific responsibilities for each user.
-  - `id` (uuid): Primary key
-  - `user_id` (uuid): Foreign key to user_profiles
-  - `responsibility` (text)
-  - `created_at` (timestampz)
+
 - **magic_links**: Handles secure, time-limited links for forms and authentication.
-  - `id` (uuid): Primary key
-  - `token` (text)
-  - `user_id` (uuid): Foreign key to user_profiles
-  - `form_type` (text)
-  - `date` (date)
-  - `expires_at`, `created_at`, `used_at` (timestampz)
+
 - **standup_entries**: Stores daily answers to the questions form, linked to each user.
-  - `id` (uuid): Primary key
-  - `user_id` (uuid): Foreign key to user_profiles
-  - `answers` (jsonb)
-  - `created_at` (timestampz)
-  - `email_sent` (bool)
+
 - **suggestions**: Stores user feedback and suggestions, linked to each user.
-  - `id` (uuid): Primary key
-  - `user_id` (uuid): Foreign key to user_profiles
-  - `suggestion` (text)
-  - `created_at` (timestampz)
-  - `implemented` (bool)
+
 - **email_subscribers**: Manages the list of users receiving emails.
-  - `id` (uuid): Primary key
-  - `email` (text)
-  - `created_at` (timestampz)
+
 
 
 ## Roadmap
 
-- **Priority #1: Get the email service working** (automated 4pm and 9am emails)
+**Priority #1: Get the email service working** (automated 4pm and 9am emails)
 - Custom questions based on user responsibilities, roles, and other metrics
 - More personalization in standup emails and feedback
 - Improved suggestions and feedback loop
 
-- **Custom Questions:**
+**Custom Questions:**
 -  In the future, the questions form will be dynamically generated based on your responsibilities, role, and other metrics.
 
-- **More Personalization:**
+**More Personalization:**
 - Standup emails and feedback will become increasingly tailored as the system learns from your input.
 
 ## Tech Stack
